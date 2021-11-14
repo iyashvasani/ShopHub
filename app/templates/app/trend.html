@@ -1,0 +1,38 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Trending Deals{% endblock title %}
+{% block main-content %}
+<div class="container my-5">
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="list-group">
+        <a href="{% url 'trend' %}" class="list-group-item list-group-item-action" aria-current="true">All Trending Deals</a>
+        <a href="{% url 'trenddata' 'Beats' %}" class="list-group-item list-group-item-action" aria-current="true">Beats</a>
+        <a href="{% url 'trenddata' 'Olay' %}" class="list-group-item list-group-item-action" aria-current="true">Olay</a>
+        <a href="{% url 'trenddata' 'Rubiks' %}" class="list-group-item list-group-item-action" aria-current="true">Rubkis Cube</a>
+        <a href="{% url 'trenddata' 'Peome' %}" class="list-group-item list-group-item-action" aria-current="true">Peome Perfume</a>
+        <a href="{% url 'trenddata' 'Handbag' %}" class="list-group-item list-group-item-action" aria-current="true">Hand bag</a>
+        <a href="{% url 'trenddata' 'Now' %}" class="list-group-item list-group-item-action" aria-current="true">Now</a>
+        <a href="{% url 'trenddata' 'below' %}" class="list-group-item list-group-item-action" aria-current="true">Below ₹1,000</a>
+        <a href="{% url 'trenddata' 'above' %}" class="list-group-item list-group-item-action" aria-current="true">Above ₹1,000</a>
+      </div>
+    </div>
+    <div class="col-sm-8">
+      <div class="row">
+        {% for product in trends %}
+          <div class="col-sm-4 text-center mb-4">
+            <a href="{% url 'product-detail' product.id %}" class="btn">
+              <div class="item">
+                <img src="{{product.product_image.url }}" alt="" height="300" class="">
+                <div class="fw-bold">{{product.title}}</div>
+                <div class="fw-bold">{{product.discounted_price}}
+                <small class="fw-light text-decoration-line-through">{{product.selling_price}}</small></div>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>        
+{% endblock main-content %}

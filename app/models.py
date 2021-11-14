@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MaxLengthValidator, MaxValueValidator, MaxValueValidator
+from django.core.validators import MaxLengthValidator, MaxValueValidator, MinValueValidator
+
 STATE_CHOICES = (
     ('Andaman & Nicobar Island', 'Andaman & Nicobar Island'),
     ('Andhra Pradesh', 'Andhra Pradesh'),
@@ -44,6 +45,8 @@ STATE_CHOICES = (
 class Customer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
+    mobile_number = models.IntegerField(
+        default=+91)
     locality = models.CharField(max_length=200)
     city = models.CharField(max_length=50)
     zipcode = models.IntegerField()
@@ -54,17 +57,18 @@ class Customer(models.Model):
 
 
 CATEGORY_CHOICES = (
+    ('T', 'Trending Deals'),
     ('TW', 'Top Wear'),
     ('BW', 'Bottom Wear'),
     ('FW', 'Foot Wear'),
-    ('BP', 'Beauty Product'),
-    ('F', 'Furniture'),
-    ('M', 'Moblie'),
-    ('L', 'Laptop'),
-    ('C', 'Console'),
+    ('BP', 'Beauty Products'),
+    ('F', 'Furnitures'),
+    ('M', 'Mobiles'),
+    ('L', 'Laptops'),
+    ('C', 'Consoles'),
     ('EA', 'Electronics Accessories'),
     ('G', 'Games'),
-    ('TV', 'Television'),
+    ('TV', 'Televisions'),
     ('HA', 'Home Appliances'),
 )
 
@@ -90,6 +94,10 @@ class Cart(models.Model):
     def __str__(self):
         return str(self.id)
 
+    @property
+    def total_cost(self):
+        return self.quantity * self.product.discounted_price
+
 
 STATUS_CHOICES = (
     ('Accepted', 'Accepted'),
@@ -107,4 +115,8 @@ class OrderPlaced(models.Model):
     quantity = models.PositiveSmallIntegerField(default=1)
     ordered_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
-        max_length=50, choices=STATE_CHOICES, default='Pending')
+        max_length=50, choices=STATUS_CHOICES, default='Pending')
+
+    @property
+    def total_cost(self):
+        return self.quantity * self.product.discounted_price
